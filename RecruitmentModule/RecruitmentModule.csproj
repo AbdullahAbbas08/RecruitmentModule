@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RM.BusinessLayer\RM.BusinessLayer.csproj" />
     <ProjectReference Include="..\RM.DataAccessLayer\RM.DataAccessLayer.csproj" />
   </ItemGroup>
 

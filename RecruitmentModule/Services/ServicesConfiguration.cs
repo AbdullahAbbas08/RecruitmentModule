@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using RM.BusinessLayer.IRepositories;
 using RM.DataAccessLayer.Data;
 using RM.Shared;
 
@@ -42,7 +40,8 @@ namespace RecruitmentModule.Services
             });
 
             builder.Services.AddScoped<HttpContextAccessor>();
-            //builder.Services.AddScoped<IUnitOfWork, UnitOfWork.UnitOfWork>();
+
+            builder.Services.AddScoped(typeof(GenericRepository<>),typeof(GenericRepository<>));
 
         }
     }
