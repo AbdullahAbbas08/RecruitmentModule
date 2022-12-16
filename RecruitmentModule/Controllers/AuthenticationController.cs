@@ -32,5 +32,26 @@ namespace RecruitmentModule.Controllers
             }
 
         }
+        
+        [HttpPost("AssignRole")]
+        public async Task<ActionResult<GenereicResponse<string>>> AssignRole([FromBody] AssignRoleToUserViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+                var result = await uow.Users.AddRoleAsync(model);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return new GenereicResponse<string>
+                {
+                    Data = null,
+                    Message = ex.Message,
+                    StatusCode = 500
+                };
+            }
+
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using RM.Shared.Enums;
+﻿
 
 namespace RM.BusinessLayer.IRepositories
 {
@@ -31,9 +31,9 @@ namespace RM.BusinessLayer.IRepositories
             {
                 AppRole[] roles = new AppRole[]
                 {
-                    new AppRole(){Name = Roles.SuperAdmin.ToString()},
-                    new AppRole(){Name = Roles.Admin.ToString()},
-                    new AppRole(){Name = Roles.Applicant.ToString()},
+                    new AppRole(){Name = Role.SuperAdmin},
+                    new AppRole(){Name = Role.Admin},
+                    new AppRole(){Name = Role.Applicant},
                 };
                 AddRange(roles);
             }

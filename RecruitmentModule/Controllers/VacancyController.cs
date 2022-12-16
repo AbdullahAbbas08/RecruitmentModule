@@ -1,9 +1,8 @@
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
-using RM.Shared;
+
 
 namespace RecruitmentModule.Controllers
 {
+    [Authorize(Roles =Role.SuperAdmin)]
     [ApiController]
     [Route("api/[controller]")]
     public class VacancyController : ControllerBase
@@ -14,6 +13,7 @@ namespace RecruitmentModule.Controllers
             this.uow = uow;
         }
 
+       
         [HttpGet]
         public async Task<ActionResult<GenereicResponse<List<Vacancy>>>> Get()
         {

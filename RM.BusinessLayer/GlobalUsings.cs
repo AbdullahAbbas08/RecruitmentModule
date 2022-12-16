@@ -6,4 +6,5 @@ global using AutoMapper;
 global using Microsoft.AspNetCore.Identity;
 global using RM.BusinessLayer.IRepositories;
 global using RM.BusinessLayer.IUnitOfWorkNameSpace;
+global using RM.Shared.Constants;
 

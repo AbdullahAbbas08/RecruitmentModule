@@ -14,6 +14,7 @@ namespace RM.BusinessLayer.IRepositories
     {
         Task<GenereicResponse<string>> RegisterEmployee(UserRegisterViewModel model);
         Task<GenereicResponse<string>> Login(LoginViewModel model);
+        Task<GenereicResponse<string>> AddRoleAsync(AssignRoleToUserViewModel model);
 
     }
     #endregion
@@ -36,12 +37,12 @@ namespace RM.BusinessLayer.IRepositories
         {
             try
             {
-                var RoleExist = uow.Roles.Find(Roles.Applicant.ToString());
+                var RoleExist = uow.Roles.Find(Role.Applicant);
                 if (RoleExist != null)
                     return new GenereicResponse<string>
                     {
                         Data = null,
-                        Message = $"Role {Roles.Applicant}  Not Exist",
+                        Message = $"Role {Role.Applicant}  Not Exist",
                         StatusCode = 400
                     };
 
@@ -59,7 +60,7 @@ namespace RM.BusinessLayer.IRepositories
 
                 #region Assign Default Role To User
                 AppUser ReturenUser = await uow.UserManager.FindByIdAsync(user.Id);
-                await uow.UserManager.AddToRoleAsync(ReturenUser, Roles.Applicant.ToString());
+                await uow.UserManager.AddToRoleAsync(ReturenUser, Role.Applicant);
                 #endregion
 
                 #region Create Toaken
@@ -148,6 +149,34 @@ namespace RM.BusinessLayer.IRepositories
             };
         }
 
+        public async Task<GenereicResponse<string>> AddRoleAsync(AssignRoleToUserViewModel model)
+        {
+            var user = await uow.UserManager.FindByIdAsync(model.UserId);
+
+            if (user is null || !await uow.RoleManager.RoleExistsAsync(model.Role.ToString()))
+                return new GenereicResponse<string>
+                {
+                    Data = null,
+                    Message = "Invalid user ID or Role",
+                    StatusCode = 400
+                };
+
+            if (await uow.UserManager.IsInRoleAsync(user, model.Role.ToString()))
+                return new GenereicResponse<string>
+                {
+                    Data = null,
+                    Message = "User already assigned to this role",
+                    StatusCode = 400
+                };
+
+            var result = await uow.UserManager.AddToRoleAsync(user, model.Role.ToString());
+            return new GenereicResponse<string>
+            {
+                Data = null,
+                Message = result.Succeeded ? string.Empty : "Sonething went wrong",
+                StatusCode = 400
+            };
+        }
     }
     #endregion
 }

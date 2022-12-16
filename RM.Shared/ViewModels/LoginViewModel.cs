@@ -1,6 +1,6 @@
 ﻿namespace RM.Shared.ViewModels
 {
-    public class LoginViewModel 
+    public class LoginViewModel
     {
         [Required(ErrorMessage = "Please Enter Valid Username")]
         [Display(Name = "Username")]
