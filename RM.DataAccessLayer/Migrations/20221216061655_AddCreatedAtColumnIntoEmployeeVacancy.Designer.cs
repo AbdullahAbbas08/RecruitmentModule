@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RM.DataAccessLayer.Data;
 
@@ -11,9 +12,10 @@ using RM.DataAccessLayer.Data;
 namespace RM.DataAccessLayer.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20221216061655_AddCreatedAtColumnIntoEmployeeVacancy")]
+    partial class AddCreatedAtColumnIntoEmployeeVacancy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -382,12 +384,22 @@ namespace RM.DataAccessLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int?>("ResponsibilitiesId")
+                        .HasColumnType("int");
+
                     b.Property<string>("SkillItem")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("VacancyID")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ResponsibilitiesId");
+
+                    b.HasIndex("VacancyID");
 
                     b.ToTable("Skills");
                 });
@@ -441,24 +453,7 @@ namespace RM.DataAccessLayer.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("JobCategoryId");
-
                     b.ToTable("Vacancies");
-                });
-
-            modelBuilder.Entity("SkillsVacancy", b =>
-                {
-                    b.Property<int>("SkillsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("VacanciesID")
-                        .HasColumnType("int");
-
-                    b.HasKey("SkillsId", "VacanciesID");
-
-                    b.HasIndex("VacanciesID");
-
-                    b.ToTable("SkillsVacancy");
                 });
 
             modelBuilder.Entity("RM.Shared.Applicant", b =>
@@ -590,30 +585,15 @@ namespace RM.DataAccessLayer.Migrations
                     b.Navigation("Vacancy");
                 });
 
-            modelBuilder.Entity("RM.Shared.Vacancy", b =>
+            modelBuilder.Entity("RM.Shared.Skills", b =>
                 {
-                    b.HasOne("RM.Shared.JobCategory", "JobCategory")
-                        .WithMany()
-                        .HasForeignKey("JobCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("JobCategory");
-                });
-
-            modelBuilder.Entity("SkillsVacancy", b =>
-                {
-                    b.HasOne("RM.Shared.Skills", null)
-                        .WithMany()
-                        .HasForeignKey("SkillsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("RM.Shared.Responsibilities", null)
+                        .WithMany("Skills")
+                        .HasForeignKey("ResponsibilitiesId");
 
                     b.HasOne("RM.Shared.Vacancy", null)
-                        .WithMany()
-                        .HasForeignKey("VacanciesID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany("Skills")
+                        .HasForeignKey("VacancyID");
                 });
 
             modelBuilder.Entity("RM.Shared.AppRole", b =>
@@ -626,9 +606,19 @@ namespace RM.DataAccessLayer.Migrations
                     b.Navigation("UserRoles");
                 });
 
+            modelBuilder.Entity("RM.Shared.Responsibilities", b =>
+                {
+                    b.Navigation("Skills");
+                });
+
             modelBuilder.Entity("RM.Shared.UserTitle", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("RM.Shared.Vacancy", b =>
+                {
+                    b.Navigation("Skills");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,16 +1,27 @@
-﻿namespace RM.Shared
+﻿namespace RM.Shared.ViewModels
 {
-    public class Vacancy : _Model
+    public class VacancyViewModel 
     {
+        public VacancyViewModel()
+        {
+            Responsibilities = new();
+            Skills = new();    
+
+        }
+
         [Required(ErrorMessage = "PleaseEnterName")]
         [MaxLength(50, ErrorMessage = "Maximum50Characters")]
         [Display(Name = "Name")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "PleaseDescription")]
-        [MinLength(20, ErrorMessage = "Minimum20Characters")]
+        [MinLength(100, ErrorMessage = "Minimum100Characters")]
         [Display(Name = "Description")]
         public string Description { get; set; }
+
+        public  List<ResponsibilitiesViewModel> Responsibilities { get; set; }
+        public  List<SkillsViewModel> Skills { get; set; }
+
 
         [Required]
         public DateTime ValidateFrom { get; set; }
@@ -22,13 +33,5 @@
 
 
         public int JobCategoryId { get; set; }
-
-        [ForeignKey("JobCategoryId")]
-        public virtual JobCategory JobCategory { get; set; }
-
-        public virtual ICollection<Applicant> Applicants { get; set; }
-        public virtual ICollection<Responsibilities> Responsibilities { get; set; }
-        public virtual ICollection<Skills> Skills { get; set; }
     }
-
 }

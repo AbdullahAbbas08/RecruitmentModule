@@ -1,4 +1,6 @@
-﻿namespace RM.BusinessLayer.IRepositories
+﻿using RM.Shared.Enums;
+
+namespace RM.BusinessLayer.IRepositories
 {
 
     #region Definitions
@@ -12,10 +14,12 @@
     #region Implementation Section
     public class RoleRepository : GenericRepository<AppRole>, IRoleRepository
     {
+        private readonly DatabaseContext db;
         private readonly RoleManager<AppRole> roleManager;
 
         public RoleRepository(DatabaseContext db, IUnitOfWork uow, RoleManager<AppRole> roleManager) : base(db, uow)
         {
+            this.db = db;
             this.roleManager = roleManager;
 
             InitialData();
@@ -27,10 +31,10 @@
             {
                 AppRole[] roles = new AppRole[]
                 {
-                    new AppRole(){Name = "Admin"},
-                    new AppRole(){Name = "Applicant"},
+                    new AppRole(){Name = Roles.SuperAdmin.ToString()},
+                    new AppRole(){Name = Roles.Admin.ToString()},
+                    new AppRole(){Name = Roles.Applicant.ToString()},
                 };
-
                 AddRange(roles);
             }
         }
@@ -55,9 +59,12 @@
             {
                 Add(role);
             }
+            db.SaveChanges();
             return roles;
         }
     }
+
     #endregion
+
 
 }

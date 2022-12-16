@@ -1,4 +1,6 @@
-﻿namespace RM.Shared
+﻿using RM.Shared.Enums;
+
+namespace RM.Shared
 {
     public class AppUser : IdentityUser
     {
@@ -13,11 +15,10 @@
         public string LastName { get; set; }
 
         [Required(ErrorMessage = "PleaseSelectGender")]
-        [MaxLength(10, ErrorMessage = "Maximum10Characters")]
-        public string Gender { get; set; }
+        public Gender Gender { get; set; }
 
 
-        [Required(ErrorMessage = "PleaseSelectRole")]
+        [Required(ErrorMessage = "PleaseSelectTitleId")]
         public int TitleId { get; set; }
 
         public virtual UserTitle Title { get; set; }

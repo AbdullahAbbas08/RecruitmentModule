@@ -1,17 +1,13 @@
-﻿namespace RM.Shared
+﻿namespace RM.Shared.ViewModels
 {
-    public class Skills
+    public class SkillsViewModel
     {
-        [Key] 
-        public int Id { get; set; }
-
         [Required(ErrorMessage = "PleaseEnterSkillItem")]
         [MaxLength(100, ErrorMessage = "Maximum100Characters")]
         [Display(Name = "SkillItem")]
         public string SkillItem { get; set; }
-
-        [JsonIgnore]
-        public virtual ICollection<Vacancy> Vacancies { get; set; }
     }
-    
+
+
+
 }

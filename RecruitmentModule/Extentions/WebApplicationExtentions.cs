@@ -19,13 +19,5 @@
             app.UseAuthorization();
 
         }
-
-        public static T GetService<T>(this WebApplication app)
-        {
-            using IServiceScope serviceScope = app.Services.CreateScope();
-            IServiceProvider services = serviceScope.ServiceProvider;
-            return services.GetRequiredService<T>();
-        }
-
     }
 }

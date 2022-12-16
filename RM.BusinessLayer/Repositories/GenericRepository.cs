@@ -106,7 +106,7 @@ namespace RM.BusinessLayer.IRepositories
 
         public virtual IEnumerable<Entity> Get()
         {
-            return DbSet;
+            return DbSet.ToList();
         }
 
         public virtual IQueryable<Entity> GetAsNoTracking()

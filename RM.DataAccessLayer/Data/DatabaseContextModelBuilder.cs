@@ -81,6 +81,9 @@ namespace RM.DataAccessLayer.Data
                 b.ToTable("UserRoles");
             });
 
+            modelBuilder.Entity<EmployeeVacancy>()
+            .HasKey(nameof(EmployeeVacancy.EmployeeId), nameof(EmployeeVacancy.VacancyId));
+
         }
     }
 }
