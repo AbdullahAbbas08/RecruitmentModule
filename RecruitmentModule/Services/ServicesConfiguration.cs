@@ -16,6 +16,8 @@ namespace RecruitmentModule.Services
 
         public static void ServicesRegisteration(this WebApplicationBuilder builder)
         {
+            builder.Services.AddCors();
+
             builder.Services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
@@ -31,7 +33,6 @@ namespace RecruitmentModule.Services
                 options.AddSecurityDefinition("Bearer ", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
-                    Description = "*** Type 'Bearer ' Before Toaken ***",
                     Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
@@ -81,14 +82,7 @@ namespace RecruitmentModule.Services
 
 
             //builder.Services.AddAuthorizationCore();
-
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy(builder.Configuration["MyAllowSpecificOrigins"], builder =>
-                {
-                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
-                });
-            });
+          
 
             builder.Services.AddScoped<HttpContextAccessor>();
 
@@ -116,6 +110,8 @@ namespace RecruitmentModule.Services
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
             });
             #endregion
+
+
         }
     }
 }

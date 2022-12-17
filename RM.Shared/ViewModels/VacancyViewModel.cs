@@ -15,7 +15,7 @@
         public string Name { get; set; }
 
         [Required(ErrorMessage = "PleaseDescription")]
-        [MinLength(100, ErrorMessage = "Minimum100Characters")]
+        [MinLength(20, ErrorMessage = "Minimum20Characters")]
         [Display(Name = "Description")]
         public string Description { get; set; }
 
@@ -31,7 +31,7 @@
 
         public int? MaximumApplications { get; set; }
 
-
+        [Required]
         public int JobCategoryId { get; set; }
     }
 }

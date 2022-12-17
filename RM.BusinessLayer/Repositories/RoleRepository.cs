@@ -22,7 +22,7 @@ namespace RM.BusinessLayer.IRepositories
             this.db = db;
             this.roleManager = roleManager;
 
-            InitialData();
+            //InitialData();
         }
 
         private void InitialData()

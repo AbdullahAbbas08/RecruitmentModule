@@ -26,5 +26,7 @@ namespace RecruitmentModule.Controllers
                 return new GenereicResponse<string> { IsSuccess = false, StatusCode = 500, Message = ex.Message, Data = null };
             }
         }
+        
+      
     }
 }

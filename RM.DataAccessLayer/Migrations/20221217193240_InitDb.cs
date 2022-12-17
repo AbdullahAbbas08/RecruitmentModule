@@ -73,6 +73,19 @@ namespace RM.DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Skills",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SkillItem = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Skills", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserTitles",
                 columns: table => new
                 {
@@ -95,12 +108,19 @@ namespace RM.DataAccessLayer.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ValidateFrom = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ValidateTo = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MaximumApplications = table.Column<int>(type: "int", nullable: true),
-                    JobCategoryId = table.Column<int>(type: "int", nullable: false)
+                    MaximumApplications = table.Column<int>(type: "int", nullable: false),
+                    JobCategoryId = table.Column<int>(type: "int", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vacancies", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Vacancies_JobCategories_JobCategoryId",
+                        column: x => x.JobCategoryId,
+                        principalTable: "JobCategories",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,8 +151,9 @@ namespace RM.DataAccessLayer.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Gender = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
-                    TitleId = table.Column<int>(type: "int", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserTitleID = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -152,11 +173,10 @@ namespace RM.DataAccessLayer.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_UserTitles_TitleId",
-                        column: x => x.TitleId,
+                        name: "FK_Users_UserTitles_UserTitleID",
+                        column: x => x.UserTitleID,
                         principalTable: "UserTitles",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -184,28 +204,51 @@ namespace RM.DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Skills",
+                name: "SkillsVacancy",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SkillItem = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ResponsibilitiesId = table.Column<int>(type: "int", nullable: true),
-                    VacancyID = table.Column<int>(type: "int", nullable: true)
+                    SkillsId = table.Column<int>(type: "int", nullable: false),
+                    VacanciesID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Skills", x => x.Id);
+                    table.PrimaryKey("PK_SkillsVacancy", x => new { x.SkillsId, x.VacanciesID });
                     table.ForeignKey(
-                        name: "FK_Skills_Responsibilities_ResponsibilitiesId",
-                        column: x => x.ResponsibilitiesId,
-                        principalTable: "Responsibilities",
-                        principalColumn: "Id");
+                        name: "FK_SkillsVacancy_Skills_SkillsId",
+                        column: x => x.SkillsId,
+                        principalTable: "Skills",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Skills_Vacancies_VacancyID",
-                        column: x => x.VacancyID,
+                        name: "FK_SkillsVacancy_Vacancies_VacanciesID",
+                        column: x => x.VacanciesID,
                         principalTable: "Vacancies",
-                        principalColumn: "ID");
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ApplicantVacancy",
+                columns: table => new
+                {
+                    ApplicantsId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    VacanciesID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApplicantVacancy", x => new { x.ApplicantsId, x.VacanciesID });
+                    table.ForeignKey(
+                        name: "FK_ApplicantVacancy_Users_ApplicantsId",
+                        column: x => x.ApplicantsId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ApplicantVacancy_Vacancies_VacanciesID",
+                        column: x => x.VacanciesID,
+                        principalTable: "Vacancies",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -270,6 +313,31 @@ namespace RM.DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmployeeVacancy",
+                columns: table => new
+                {
+                    EmployeeId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    VacancyId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmployeeVacancy", x => new { x.EmployeeId, x.VacancyId });
+                    table.ForeignKey(
+                        name: "FK_EmployeeVacancy_Users_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EmployeeVacancy_Vacancies_VacancyId",
+                        column: x => x.VacancyId,
+                        principalTable: "Vacancies",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserRoles",
                 columns: table => new
                 {
@@ -293,6 +361,21 @@ namespace RM.DataAccessLayer.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "JobCategories",
+                columns: new[] { "ID", "Title" },
+                values: new object[] { 1, "Information Technology" });
+
+            migrationBuilder.InsertData(
+                table: "UserTitles",
+                columns: new[] { "ID", "Title" },
+                values: new object[] { 1, "Prof" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApplicantVacancy_VacanciesID",
+                table: "ApplicantVacancy",
+                column: "VacanciesID");
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -309,6 +392,11 @@ namespace RM.DataAccessLayer.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_EmployeeVacancy_VacancyId",
+                table: "EmployeeVacancy",
+                column: "VacancyId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ResponsibilitiesVacancy_VacanciesID",
                 table: "ResponsibilitiesVacancy",
                 column: "VacanciesID");
@@ -321,14 +409,9 @@ namespace RM.DataAccessLayer.Migrations
                 filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Skills_ResponsibilitiesId",
-                table: "Skills",
-                column: "ResponsibilitiesId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Skills_VacancyID",
-                table: "Skills",
-                column: "VacancyID");
+                name: "IX_SkillsVacancy_VacanciesID",
+                table: "SkillsVacancy",
+                column: "VacanciesID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserRoles_RoleId",
@@ -341,9 +424,9 @@ namespace RM.DataAccessLayer.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_TitleId",
+                name: "IX_Users_UserTitleID",
                 table: "Users",
-                column: "TitleId");
+                column: "UserTitleID");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -351,10 +434,18 @@ namespace RM.DataAccessLayer.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vacancies_JobCategoryId",
+                table: "Vacancies",
+                column: "JobCategoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ApplicantVacancy");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -368,22 +459,25 @@ namespace RM.DataAccessLayer.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "IdentityUser");
+                name: "EmployeeVacancy");
 
             migrationBuilder.DropTable(
-                name: "JobCategories");
+                name: "IdentityUser");
 
             migrationBuilder.DropTable(
                 name: "ResponsibilitiesVacancy");
 
             migrationBuilder.DropTable(
-                name: "Skills");
+                name: "SkillsVacancy");
 
             migrationBuilder.DropTable(
                 name: "UserRoles");
 
             migrationBuilder.DropTable(
                 name: "Responsibilities");
+
+            migrationBuilder.DropTable(
+                name: "Skills");
 
             migrationBuilder.DropTable(
                 name: "Vacancies");
@@ -393,6 +487,9 @@ namespace RM.DataAccessLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "JobCategories");
 
             migrationBuilder.DropTable(
                 name: "UserTitles");

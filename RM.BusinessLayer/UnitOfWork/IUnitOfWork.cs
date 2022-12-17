@@ -13,7 +13,8 @@ namespace RM.BusinessLayer.IUnitOfWorkNameSpace
         RoleManager<AppRole> RoleManager { get; }
         IAppUserRepository Users { get; }
         IRoleRepository Roles { get; }
-        IVacancyRepository Vacancy { get; } 
+        IVacancyRepository Vacancy { get; }
+        IJobCategoryRepository JobCategory { get; } 
     }
 
     #region Definitions
@@ -101,6 +102,19 @@ namespace RM.BusinessLayer.IUnitOfWorkNameSpace
                     this.vacancy = new VacancyRepository(db, this);
                 }
                 return vacancy;
+            }
+        }
+        
+        private IJobCategoryRepository jobCategory;
+        public IJobCategoryRepository JobCategory
+        {
+            get 
+            {
+                if (this.jobCategory == null)
+                {
+                    this.jobCategory = new JobCategoryRepository(db, this);
+                }
+                return jobCategory;
             }
         }
     }

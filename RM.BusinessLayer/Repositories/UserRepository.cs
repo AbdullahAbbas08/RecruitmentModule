@@ -30,7 +30,30 @@ namespace RM.BusinessLayer.IRepositories
         {
             this.uow = uow;
             _jwt = jwt.Value;
+            //InitialData();
+        }
 
+        private void InitialData()
+        {
+            if (Count() == 0)
+            {
+                AppUser SuperAadmin = new AppUser
+                {
+                   FirstName = "Abdullah",
+                   LastName = "Abbas",
+                   UserName ="LinkAccount250",
+                   Gender= Gender.Male,
+                };
+
+                Task.Run(async () =>
+                {
+                  await uow.UserManager.CreateAsync(SuperAadmin, "Aa123###");
+                    AppUser ReturenUser = await uow.UserManager.FindByIdAsync(SuperAadmin.Id);
+                    await uow.UserManager.AddToRoleAsync(ReturenUser, Role.SuperAdmin);
+                    uow.DbContext.SaveChanges();
+                });
+
+            }
         }
 
         public async Task<GenereicResponse<string>> RegisterEmployee(UserRegisterViewModel model)
@@ -72,7 +95,7 @@ namespace RM.BusinessLayer.IRepositories
                 #region return Authentication Model 
                 return new GenereicResponse<string>
                 {
-                    Data = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                    Data =new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
                     Message = "Success",
                     StatusCode = 200
                 };

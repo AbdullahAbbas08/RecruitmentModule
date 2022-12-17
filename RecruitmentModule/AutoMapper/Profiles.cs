@@ -14,6 +14,7 @@ namespace RecruitmentModule.AutoMapper
             CreateMap<Vacancy, VacancyViewModel>().ReverseMap(); 
             CreateMap<Responsibilities, ResponsibilitiesViewModel>().ReverseMap(); 
             CreateMap<Skills, SkillsViewModel>().ReverseMap(); 
+            CreateMap<AppUser, Applicant>().ReverseMap(); 
         }
     }
 }

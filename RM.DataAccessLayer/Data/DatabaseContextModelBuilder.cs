@@ -39,7 +39,7 @@ namespace RM.DataAccessLayer.Data
                 b.Property(u => u.NormalizedUserName).HasMaxLength(256);
 
 
-                b.HasOne(c => c.Title).WithMany(p => p.Users).HasForeignKey(c => c.TitleId).OnDelete(DeleteBehavior.Restrict).IsRequired();              
+                //b.HasOne(c => c.Title).WithMany(p => p.Users).HasForeignKey(c => c.TitleId).OnDelete(DeleteBehavior.Restrict).IsRequired();
 
                 // Each User can have many entries in the UserRole join table
                 b.HasMany(e => e.UserRoles)
@@ -69,7 +69,7 @@ namespace RM.DataAccessLayer.Data
                     .WithOne(e => e.Role)
                     .HasForeignKey(ur => ur.RoleId)
                     .IsRequired();
-           
+
             });
 
             modelBuilder.Entity<AppUserRole>(b =>
@@ -83,6 +83,25 @@ namespace RM.DataAccessLayer.Data
 
             modelBuilder.Entity<EmployeeVacancy>()
             .HasKey(nameof(EmployeeVacancy.EmployeeId), nameof(EmployeeVacancy.VacancyId));
+
+
+            modelBuilder.Entity<UserTitle>()
+           .HasData(
+                new UserTitle()
+                {
+                    ID = 1,
+                    Title = "Prof"
+                }
+           ) ;
+            
+            modelBuilder.Entity<JobCategory>()
+           .HasData(
+                new JobCategory()
+                {
+                    ID = 1,
+                    Title = "Information Technology"
+                }
+           ) ;
 
         }
     }

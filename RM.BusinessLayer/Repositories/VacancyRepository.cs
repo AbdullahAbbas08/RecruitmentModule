@@ -14,6 +14,8 @@
         public VacancyRepository(DatabaseContext db, IUnitOfWork uow) : base(db, uow) { }
 
     }
-    #endregion
 
+#endregion
+
+     
 }

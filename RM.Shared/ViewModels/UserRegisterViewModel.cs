@@ -19,9 +19,9 @@ namespace RM.Shared.ViewModels
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Required(ErrorMessage = "Please Enter Title")]
-        [Display(Name = "Title")]
-        public int TitleId { get; set; }
+        //[Required(ErrorMessage = "Please Enter Title")]
+        //[Display(Name = "Title")]
+        //public int TitleId { get; set; }
 
 
         [Required(ErrorMessage = "Please Enter Valid Mobile Number")]
@@ -40,6 +40,6 @@ namespace RM.Shared.ViewModels
         [MinLength(8, ErrorMessage = "Minimum 8 characters")]
         [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$", ErrorMessage = "minimum 8 characters , At least one uppercase , At least one lowercase , At least one digit , At least one special character")]
         public string Password { get; set; }
-        public Gender Gender { get; set; }
+        //public Gender Gender { get; set; }
     }
 }

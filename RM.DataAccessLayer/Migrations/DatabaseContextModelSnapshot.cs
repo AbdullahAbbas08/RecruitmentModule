@@ -278,15 +278,15 @@ namespace RM.DataAccessLayer.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TitleId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<int?>("UserTitleID")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -298,7 +298,7 @@ namespace RM.DataAccessLayer.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("TitleId");
+                    b.HasIndex("UserTitleID");
 
                     b.ToTable("Users", (string)null);
 
@@ -354,6 +354,13 @@ namespace RM.DataAccessLayer.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("JobCategories");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Title = "Information Technology"
+                        });
                 });
 
             modelBuilder.Entity("RM.Shared.Responsibilities", b =>
@@ -408,6 +415,13 @@ namespace RM.DataAccessLayer.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("UserTitles");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            Title = "Prof"
+                        });
                 });
 
             modelBuilder.Entity("RM.Shared.Vacancy", b =>
@@ -422,10 +436,13 @@ namespace RM.DataAccessLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
                     b.Property<int>("JobCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("MaximumApplications")
+                    b.Property<int>("MaximumApplications")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -543,13 +560,9 @@ namespace RM.DataAccessLayer.Migrations
 
             modelBuilder.Entity("RM.Shared.AppUser", b =>
                 {
-                    b.HasOne("RM.Shared.UserTitle", "Title")
+                    b.HasOne("RM.Shared.UserTitle", null)
                         .WithMany("Users")
-                        .HasForeignKey("TitleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Title");
+                        .HasForeignKey("UserTitleID");
                 });
 
             modelBuilder.Entity("RM.Shared.AppUserRole", b =>

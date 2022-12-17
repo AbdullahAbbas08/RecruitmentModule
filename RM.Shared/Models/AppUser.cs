@@ -18,10 +18,10 @@ namespace RM.Shared
         public Gender Gender { get; set; }
 
 
-        [Required(ErrorMessage = "PleaseSelectTitleId")]
-        public int TitleId { get; set; }
+        //[Required(ErrorMessage = "PleaseSelectTitleId")]
+        //public int TitleId { get; set; }
 
-        public virtual UserTitle Title { get; set; }
+        //public virtual UserTitle Title { get; set; }
 
         public virtual ICollection<AppUserRole> UserRoles { get; set; }
     }
